@@ -1,0 +1,1 @@
+/usr/bin/c++   -O3 -Wall -std=c++0x -march=native    CMakeFiles/AiBToS_Project2.dir/src/Program.cpp.o CMakeFiles/AiBToS_Project2.dir/src/Naive.cpp.o CMakeFiles/AiBToS_Project2.dir/src/SimpleParser.cpp.o  -o bin/AiBToS_Project2 -rdynamic 
