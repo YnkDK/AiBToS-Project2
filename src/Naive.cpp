@@ -20,7 +20,7 @@ int Naive::run(Parser &parser) {
             double dim = 0.0;
             for(j=0;j<parser.n;j++){
             
-                if(parser.unused_d(j)) continue;
+                if(parser.unused_d(j) || i == j) continue;
                 
                 dim += parser.get_d(i,j);
             
@@ -38,7 +38,7 @@ int Naive::run(Parser &parser) {
             
             for(j=0;j<parser.n;j++){
             
-                if(parser.unused_d(j)) continue;
+                if(parser.unused_d(j) || i == j) continue;
                 
                 double nij = parser.get_d(i,j)-r[i]-r[j];
                 if(nij < minnij){
@@ -114,10 +114,37 @@ int Naive::run(Parser &parser) {
             parser.set_d(k,i,dkm[i]);
         }
         
+        S--;
+        
+        
+    for(i=0;i<T.size();i++){
+        cout<<i<<": ";
+        for(j=0;j<T[i].size();j++){
+            cout<<T[i][j].neighbor<<" ";
+        }
+        cout<<endl;
+    }
+    cin.get();
+        
     }
     
     
+    for(size_t i=0;i<2*parser.n;i++){
+        cout<<parser.unused_d(i)<<" ";
+    }
+    cout<<endl;
     
+    size_t i,j;
+    
+    for(i=0;i<T.size();i++){
+        cout<<i<<": ";
+        for(j=0;j<T[i].size();j++){
+            cout<<T[i][j].neighbor<<" ";
+        }
+        cout<<endl;
+    }
+    cin.get();
+        
     
     
     return EXIT_SUCCESS;

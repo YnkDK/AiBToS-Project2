@@ -20,7 +20,6 @@ int SimpleParser::from_phylip_file(const char *file_path) {
     }
     
     fin.close();
-    cout<<"asdasldkas"<<endl;
     
     // EXIT_FAILURE if anything goes wrong
     return EXIT_SUCCESS;
