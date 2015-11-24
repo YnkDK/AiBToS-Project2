@@ -6,6 +6,10 @@ int SimpleParser::from_phylip_file(const char *file_path) {
     fin.open(file_path, ios_base::in);
     
     fin>>n;
+    rows = n-1;
+    offset.resize(2*n);
+    for(size_t i = 0; i < n; i++) offset[i] = i;
+    unused.resize(2*n, false);
     leafLabels.resize(n);
     D.resize(n, vector<double>(n));
     size_t i,j;
