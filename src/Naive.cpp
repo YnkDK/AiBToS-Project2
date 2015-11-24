@@ -148,8 +148,61 @@ int Naive::run(Parser &parser) {
     }
     cout << endl;
     cin.get();
-        
+    size_t i,j,m;
+    i = j = m = (size_t)-1;
     
+    for(size_t x = 0; x < parser.n*2; x++){
+        if(parser.is_taxa(x)){
+        
+            if(i == (size_t)-1) i = x;
+            else if(j == (size_t)-1) j = x;
+            else{
+                m = x;
+                break;
+            }
+        }
+    }
+    
+    size_t v = parser.getNextId();
+    
+    /*
+        * 
+        * final step
+        * 
+        */
+    
+    Parser::Edge edge;
+    
+    //create edge between v and i
+    edge.neighbor = i;
+    edge.weight = (parser.get_d(i,j) + parser.get_d(i,m)-parser.get_d(j,m))/2;
+    cout<<"first: "<<parser.get_d(i,j)<<" "<<parser.get_d(i,m)<<" "<<parser.get_d(j,m)<<endl;
+    T[v].push_back(edge);
+    edge.neighbor = v;
+    T[i].push_back(edge);
+    
+    //create edge between v and j
+    edge.neighbor = j;
+    edge.weight = (parser.get_d(i,j) + parser.get_d(j,m)-parser.get_d(i,m))/2;
+    T[v].push_back(edge);
+    edge.neighbor = v;
+    T[j].push_back(edge);
+    
+    //create edge between v and i
+    edge.neighbor = m;
+    edge.weight = (parser.get_d(i,m) + parser.get_d(j,m)-parser.get_d(i,j))/2;
+    T[v].push_back(edge);
+    edge.neighbor = v;
+    T[m].push_back(edge);
+    
+    for(i=0;i<T.size();i++){
+        cout<<i<<": ";
+        for(j=0;j<T[i].size();j++){
+            cout<<"{"<<T[i][j].neighbor<<","<<T[i][j].weight<<"} ";
+        }
+        cout<<endl;
+    }
+    cin.get();
     
     return EXIT_SUCCESS;
 }
