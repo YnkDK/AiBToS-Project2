@@ -10,10 +10,9 @@ private:
     vector<size_t> offset;
     vector<bool> unused;
     size_t last_delete;
-    size_t rows;
-
 
 public:
+    size_t rows;
     /**
      * Get the distance between i and j
      */
@@ -49,6 +48,10 @@ public:
      */
     inline bool unused_d(const size_t i) {
         return unused[offset[i]];
+    }
+    
+    inline size_t getNextId(){
+        return rows+1;
     }
 
     int from_phylip_file(const char *file_path);

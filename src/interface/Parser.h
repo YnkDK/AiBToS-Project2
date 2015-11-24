@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <limits>
+#include <iostream>
 
 using namespace std;
 
@@ -27,6 +29,7 @@ public:
 
     virtual int from_phylip_file(const char *file_path) = 0;
     virtual int to_newick_file(vector<vector<Edge>>& T, const char *file_path) = 0;
+    virtual size_t getNextId() = 0;
 };
 
 #endif //AIBTOS_PROJECT2_PARSER_H

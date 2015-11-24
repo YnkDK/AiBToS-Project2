@@ -5,6 +5,10 @@
 #include "interface/NeighborJoining.h"
 
 class Naive : public NeighborJoining {
+    
+private:
+    vector<vector<Parser::Edge>> T;
+    
 public:
     int run(Parser &parser);
 };

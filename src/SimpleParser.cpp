@@ -4,7 +4,6 @@ int SimpleParser::from_phylip_file(const char *file_path) {
     
     ifstream fin;
     fin.open(file_path, ios_base::in);
-    
     fin>>n;
     rows = n-1;
     offset.resize(2*n);
@@ -21,6 +20,8 @@ int SimpleParser::from_phylip_file(const char *file_path) {
     }
     
     fin.close();
+    cout<<"asdasldkas"<<endl;
+    
     // EXIT_FAILURE if anything goes wrong
     return EXIT_SUCCESS;
 }
