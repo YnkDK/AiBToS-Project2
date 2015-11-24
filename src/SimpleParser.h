@@ -9,6 +9,7 @@ private:
     vector<vector<double>> D;
     vector<size_t> offset;
     vector<bool> unused;
+    vector<bool> taxa;
     size_t last_delete;
 
 public:
@@ -32,6 +33,7 @@ public:
     inline void delete_d(const size_t i) {
         last_delete = offset[i];
         unused[offset[i]] = true;
+        taxa[i] = false;
     }
 
     /**
@@ -41,6 +43,7 @@ public:
         rows++;
         offset[rows] = last_delete;
         unused[last_delete] = false;
+        taxa[rows] = true;
         return rows;
     }
     /**
@@ -52,6 +55,10 @@ public:
     
     inline size_t getNextId(){
         return rows+1;
+    }
+
+    inline bool is_taxa(const size_t i) {
+        return taxa[i];
     }
 
     int from_phylip_file(const char *file_path);

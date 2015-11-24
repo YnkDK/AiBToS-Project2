@@ -29,8 +29,8 @@ int Naive::run(Parser &parser) {
             r[i] = dim/(S-2);
         }
         
-        size_t mini = -1;
-        size_t minj = -1;
+        size_t mini = (size_t) -1;
+        size_t minj = (size_t) -1;
         double minnij = std::numeric_limits<double>::max();
         for(i=0;i<parser.n;i++){
             
@@ -115,34 +115,38 @@ int Naive::run(Parser &parser) {
         }
         
         S--;
-        
-        
-    for(i=0;i<T.size();i++){
-        cout<<i<<": ";
-        for(j=0;j<T[i].size();j++){
-            cout<<T[i][j].neighbor<<" ";
-        }
-        cout<<endl;
-    }
-    cin.get();
-        
+
+
+//    for(i=0;i<T.size();i++){
+//        cout<<i<<": ";
+//        for(j=0;j<T[i].size();j++){
+//            cout<<T[i][j].neighbor<<" ";
+//        }
+//        cout<<endl;
+//    }
+
     }
     
     
-    for(size_t i=0;i<2*parser.n;i++){
-        cout<<parser.unused_d(i)<<" ";
+//    for(size_t i=0;i<2*parser.n;i++){
+//        cout<<parser.unused_d(i)<<" ";
+//    }
+//    cout<<endl;
+//
+//    size_t i,j;
+//
+//    for(i=0;i<T.size();i++){
+//        cout<<i<<": ";
+//        for(j=0;j<T[i].size();j++){
+//            cout<<T[i][j].neighbor<<" ";
+//        }
+//        cout<<endl;
+//    }
+//    cin.get();
+    for(size_t i = 0; i < parser.n*2; i++) {
+        cout << parser.is_taxa(i) << " ";
     }
-    cout<<endl;
-    
-    size_t i,j;
-    
-    for(i=0;i<T.size();i++){
-        cout<<i<<": ";
-        for(j=0;j<T[i].size();j++){
-            cout<<T[i][j].neighbor<<" ";
-        }
-        cout<<endl;
-    }
+    cout << endl;
     cin.get();
         
     
