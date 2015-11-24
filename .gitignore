@@ -29,4 +29,7 @@
 
 # IDE files
 .idea
+/cmake_install.cmake
+/CMakeFiles
+/CMakeCache.txt
 *~
