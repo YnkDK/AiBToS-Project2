@@ -5,7 +5,7 @@
 #include "Naive.h"
 
 int main(int argc, char *argv[]) {
-    if(argc != 2) {
+    if(argc != 3) {
         std::cerr << "Usage: ./Program input_path output_path" << std::endl;
         return EXIT_FAILURE;
     }
@@ -17,6 +17,6 @@ int main(int argc, char *argv[]) {
     if(exit_status != EXIT_SUCCESS) return exit_status;
     exit_status = nj.run(parser);
     if(exit_status != EXIT_SUCCESS) return exit_status;
-    //exit_status = parser.to_newick_file(nullptr, argv[2]);
+    exit_status = parser.to_newick_file(nj.getT(), argv[2]);
     return exit_status;
 }

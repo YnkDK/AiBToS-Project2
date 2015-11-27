@@ -3,14 +3,21 @@
 
 #include <stdlib.h>
 #include "interface/Parser.h"
+#include <fstream>
 
 class SimpleParser : public Parser {
 private:
     vector<vector<double>> D;
     vector<size_t> offset;
+    vector<size_t> offsetD;
     vector<bool> unused;
     vector<bool> taxa;
     size_t last_delete;
+    vector<vector<Edge>> *T;
+    void dfs(size_t curNode, bool isLast);
+    vector<bool> visited;
+    vector<size_t> numNeighborsLeft;
+    ofstream fout;
 
 public:
     size_t rows;
@@ -42,6 +49,9 @@ public:
     inline size_t add_node() {
         rows++;
         offset[rows] = last_delete;
+        if(last_delete < n){
+            offsetD[last_delete] = rows;
+        }
         unused[last_delete] = false;
         taxa[rows] = true;
         return rows;
@@ -60,9 +70,37 @@ public:
     inline bool is_taxa(const size_t i) {
         return taxa[i];
     }
+    
+    inline size_t getOffset(size_t i){
+        return offset[i];
+    }
+
+    inline size_t getOffsetD(size_t i){
+        return offsetD[i];
+    }
+
+    inline void printD(){
+        
+        for(size_t i=0;i<D.size();i++){
+            for(size_t j=0;j<D[i].size();j++){
+                cout<<D[i][j]<<" ";
+            }
+            cout<<endl;
+        }
+        
+    }
+    
+    inline void printOffset(){
+        
+        for(size_t i=0; i<offset.size();i++){
+            cout<<offset[i]<<" ";
+        }
+        cout<<endl;
+    
+    }
 
     int from_phylip_file(const char *file_path);
-    int to_newick_file(vector<vector<Edge>>& T, const char *file_path);
+    int to_newick_file(vector<vector<Edge>>* T, const char *file_path);
 
 };
 

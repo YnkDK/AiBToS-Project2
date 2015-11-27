@@ -8,7 +8,7 @@ int Naive::run(Parser &parser) {
     T.resize(2*parser.n);
     
     while(S > 3){
-        
+
         size_t i,j;
         /*
          * step 1
@@ -21,14 +21,12 @@ int Naive::run(Parser &parser) {
             for(j=0;j<parser.n;j++){
             
                 if(parser.unused_d(j) || i == j) continue;
-                
                 dim += parser.get_d(i,j);
             
             }
             
             r[i] = dim/(S-2);
         }
-        
         size_t mini = (size_t) -1;
         size_t minj = (size_t) -1;
         double minnij = std::numeric_limits<double>::max();
@@ -39,7 +37,6 @@ int Naive::run(Parser &parser) {
             for(j=0;j<parser.n;j++){
             
                 if(parser.unused_d(j) || i == j) continue;
-                
                 double nij = parser.get_d(i,j)-r[i]-r[j];
                 if(nij < minnij){
                     minnij = nij;
@@ -48,9 +45,7 @@ int Naive::run(Parser &parser) {
                 }
                 
             }
-            
         }
-        
         /*
          * 
          * step 2
@@ -68,28 +63,28 @@ int Naive::run(Parser &parser) {
         Parser::Edge edge;
         
         //create edge between k and mini
-        edge.neighbor = mini;
+        size_t minioffsetD =  parser.getOffsetD(mini);
+        size_t minjoffsetD = parser.getOffsetD(minj);
+        edge.neighbor = minioffsetD;
         edge.weight = (parser.get_d(mini,minj) + r[mini]- r[minj])/2;
         T[k].push_back(edge);
         //create edge between mini and k
         edge.neighbor = k;
-        T[mini].push_back(edge);
+        T[minioffsetD].push_back(edge);
         
         //create edge between k and minj
-        edge.neighbor = minj;
+        edge.neighbor = minjoffsetD;
         edge.weight = (parser.get_d(mini,minj) + r[minj]- r[mini])/2;
         T[k].push_back(edge);
         //create edge between minj and k
         edge.neighbor = k;
-        T[minj].push_back(edge);
-        
+        T[minjoffsetD].push_back(edge);
         /*
          * 
          * step 4
          * 
          */
-        
-        vector<double> dkm(parser.getNextId()-1);
+        vector<double> dkm(parser.getNextId());
         
         for(i=0;i<dkm.size();i++){
         
@@ -108,46 +103,17 @@ int Naive::run(Parser &parser) {
         parser.delete_d(minj);
         
         parser.add_node();
-        
+
         for(i=0;i<dkm.size();i++){
             if(parser.unused_d(i)) continue;
             parser.set_d(k,i,dkm[i]);
+            parser.set_d(i,k,dkm[i]);
         }
         
         S--;
 
-
-//    for(i=0;i<T.size();i++){
-//        cout<<i<<": ";
-//        for(j=0;j<T[i].size();j++){
-//            cout<<T[i][j].neighbor<<" ";
-//        }
-//        cout<<endl;
-//    }
-
     }
-    
-    
-//    for(size_t i=0;i<2*parser.n;i++){
-//        cout<<parser.unused_d(i)<<" ";
-//    }
-//    cout<<endl;
-//
-//    size_t i,j;
-//
-//    for(i=0;i<T.size();i++){
-//        cout<<i<<": ";
-//        for(j=0;j<T[i].size();j++){
-//            cout<<T[i][j].neighbor<<" ";
-//        }
-//        cout<<endl;
-//    }
-//    cin.get();
-    for(size_t i = 0; i < parser.n*2; i++) {
-        cout << parser.is_taxa(i) << " ";
-    }
-    cout << endl;
-    cin.get();
+
     size_t i,j,m;
     i = j = m = (size_t)-1;
     
@@ -170,13 +136,15 @@ int Naive::run(Parser &parser) {
         * final step
         * 
         */
-    
+
+    if(i<parser.n) i = parser.getOffsetD(i);
+    if(j<parser.n) j = parser.getOffsetD(j);
+    if(m<parser.n) m = parser.getOffsetD(m);
+
     Parser::Edge edge;
-    
     //create edge between v and i
     edge.neighbor = i;
     edge.weight = (parser.get_d(i,j) + parser.get_d(i,m)-parser.get_d(j,m))/2;
-    cout<<"first: "<<parser.get_d(i,j)<<" "<<parser.get_d(i,m)<<" "<<parser.get_d(j,m)<<endl;
     T[v].push_back(edge);
     edge.neighbor = v;
     T[i].push_back(edge);
@@ -194,7 +162,9 @@ int Naive::run(Parser &parser) {
     T[v].push_back(edge);
     edge.neighbor = v;
     T[m].push_back(edge);
-    
+
+
+
     for(i=0;i<T.size();i++){
         cout<<i<<": ";
         for(j=0;j<T[i].size();j++){
@@ -202,7 +172,6 @@ int Naive::run(Parser &parser) {
         }
         cout<<endl;
     }
-    cin.get();
-    
+
     return EXIT_SUCCESS;
 }
