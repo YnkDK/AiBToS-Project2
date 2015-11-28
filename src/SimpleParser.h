@@ -14,10 +14,13 @@ private:
     vector<bool> taxa;
     size_t last_delete;
     vector<vector<Edge>> *T;
-    void dfs(size_t curNode, bool isLast);
+    void dfs(size_t curNode, double weight);
     vector<bool> visited;
     vector<size_t> numNeighborsLeft;
     ofstream fout;
+    inline bool isLeaf(size_t node){
+        return node < leafLabels.size();
+    }
 
 public:
     size_t rows;

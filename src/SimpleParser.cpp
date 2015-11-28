@@ -31,35 +31,48 @@ int SimpleParser::from_phylip_file(const char *file_path) {
     return EXIT_SUCCESS;
 }
 
-void SimpleParser::dfs(size_t curNode, bool isLast){
+void SimpleParser::dfs(size_t curNode, double weight){
 
-    bool isLeaf = false;
-    if(curNode < leafLabels.size())
-        isLeaf = true;
+    //we just visited the curNode, so mark it
     visited[curNode] = true;
-    if(!isLeaf)
-        fout<<'(';
-    else {
-        if(!isLast)
-            fout << leafLabels[curNode] << ",";
-        else
-            fout << leafLabels[curNode];
+    //if the curNode is not a leaf we have to print a left parenthesis
+    if(!isLeaf(curNode)) {
+        fout << '(';
     }
-
+    //sz will save the number of neighbours of curNode
     size_t sz = (*T)[curNode].size();
+    //for every neighbor of curNode
     for(size_t i=0; i<sz; i++){
+        //pick the next neighbor
         size_t neighbor = (*T)[curNode][i].neighbor;
+        //if we visited it then do nothing
         if(!visited[neighbor]){
-            if(numNeighborsLeft[curNode] == 1)
-                dfs(neighbor, true);
-            else
-                dfs(neighbor, false);
-            numNeighborsLeft[curNode] -= 1;
+                //otherwise visit the neighbor
+                dfs(neighbor, (*T)[curNode][i].weight);
+                //now we need to know what character to print next. If there are more nodes remained to visit, then we print a comma. Otherwise we print nothing and will later (after for loop) print a right parenthesis.
+                size_t numNodesLeft = 0;
+                for(size_t j = i+1; j < sz; j++){
+                    size_t neighbor2 = (*T)[curNode][j].neighbor;
+                    if(!visited[neighbor2]){
+                        numNodesLeft++;
+                    }
+                }
+                if(numNodesLeft>0)
+                    fout<<',';
         }
     }
-
-    if(!isLeaf)
-      fout<<")";
+    //if the current node is the starting node then we print );
+    if(curNode == (*T)[0][0].neighbor) {
+        fout << ");";
+    }
+    //else if it's an internal node we print ): and the weight
+    else if(!isLeaf(curNode)){
+        fout<<"):"<<weight;
+    }
+    //else if it's neither an internal node nor the starting node, it must be a leaf so print the name of the leaf together with the weight
+    else{
+        fout << leafLabels[curNode] <<":"<<(*T)[curNode][0].weight;
+    }
 }
 
 int SimpleParser::to_newick_file(vector<vector<Edge>>* T, const char *file_path) {
@@ -69,13 +82,7 @@ int SimpleParser::to_newick_file(vector<vector<Edge>>* T, const char *file_path)
 
     fout.open(file_path, ios_base::out);
     visited.resize(T->size(), false);
-    numNeighborsLeft.resize(T->size(),0);
-    for(size_t i = 0; i<T->size();i++){
-        numNeighborsLeft[i] = (*T)[i].size();
-    }
-    fout<<'(';
-    dfs(0,false);
-    fout<<')'<<endl;
+    dfs((*T)[0][0].neighbor, (*T)[0][0].weight);
     fout.close();
 
     return EXIT_SUCCESS;
