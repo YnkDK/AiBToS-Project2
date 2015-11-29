@@ -11,7 +11,6 @@ private:
     vector<size_t> offset;
     vector<size_t> offsetD;
     vector<bool> unused;
-    vector<bool> taxa;
     size_t last_delete;
     vector<vector<Edge>> *T;
     void dfs(size_t curNode, double weight);
@@ -43,7 +42,6 @@ public:
     inline void delete_d(const size_t i) {
         last_delete = offset[i];
         unused[offset[i]] = true;
-        taxa[i] = false;
     }
 
     /**
@@ -56,7 +54,6 @@ public:
             offsetD[last_delete] = rows;
         }
         unused[last_delete] = false;
-        taxa[rows] = true;
         return rows;
     }
     /**
@@ -69,11 +66,6 @@ public:
     inline size_t getNextId(){
         return rows+1;
     }
-
-    inline bool is_taxa(const size_t i) {
-        return taxa[i];
-    }
-    
     inline size_t getOffset(size_t i){
         return offset[i];
     }

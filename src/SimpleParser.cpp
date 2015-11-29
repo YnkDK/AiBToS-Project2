@@ -8,11 +8,9 @@ int SimpleParser::from_phylip_file(const char *file_path) {
     rows = n-1;
     offset.resize(2*n);
     offsetD.resize(n);
-    taxa.resize(2*n, false);
     for(size_t i = 0; i < n; i++) {
         offset[i] = i;
         offsetD[i] = i;
-        taxa[i] = true;
     }
     unused.resize(2*n, false);
     leafLabels.resize(n);

@@ -117,8 +117,8 @@ int Naive::run(Parser &parser) {
     size_t i,j,m;
     i = j = m = (size_t)-1;
     
-    for(size_t x = 0; x < parser.n*2; x++){
-        if(parser.is_taxa(x)){
+    for(size_t x = 0; x < parser.n; x++){
+        if(!parser.unused_d(x)){
         
             if(i == (size_t)-1) i = x;
             else if(j == (size_t)-1) j = x;
@@ -137,9 +137,9 @@ int Naive::run(Parser &parser) {
         * 
         */
 
-    if(i<parser.n) i = parser.getOffsetD(i);
-    if(j<parser.n) j = parser.getOffsetD(j);
-    if(m<parser.n) m = parser.getOffsetD(m);
+    i = parser.getOffsetD(i);
+    j = parser.getOffsetD(j);
+    m = parser.getOffsetD(m);
 
     Parser::Edge edge;
     //create edge between v and i
@@ -156,7 +156,7 @@ int Naive::run(Parser &parser) {
     edge.neighbor = v;
     T[j].push_back(edge);
     
-    //create edge between v and i
+    //create edge between v and m
     edge.neighbor = m;
     edge.weight = (parser.get_d(i,m) + parser.get_d(j,m)-parser.get_d(i,j))/2;
     T[v].push_back(edge);
