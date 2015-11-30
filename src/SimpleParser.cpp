@@ -1,5 +1,7 @@
 #include "SimpleParser.h"
 
+
+
 int SimpleParser::from_phylip_file(const char *file_path) {
     
     ifstream fin;
@@ -75,7 +77,8 @@ void SimpleParser::dfs(size_t curNode, double weight){
 
 int SimpleParser::to_newick_file(vector<vector<Edge>>* T) {
     // EXIT_FAILURE if anything goes wrong
-
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
     this->T = T;
     visited.resize(T->size(), false);
     dfs((*T)[0][0].neighbor, (*T)[0][0].weight);
