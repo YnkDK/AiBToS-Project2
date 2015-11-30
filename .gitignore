@@ -24,6 +24,7 @@
 
 # Executables
 *.exe
+/tmp
 *.out
 *.app
 

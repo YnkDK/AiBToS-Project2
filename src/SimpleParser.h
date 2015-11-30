@@ -16,7 +16,6 @@ private:
     void dfs(size_t curNode, double weight);
     vector<bool> visited;
     vector<size_t> numNeighborsLeft;
-    ofstream fout;
     inline bool isLeaf(size_t node){
         return node < leafLabels.size();
     }
@@ -95,7 +94,7 @@ public:
     }
 
     int from_phylip_file(const char *file_path);
-    int to_newick_file(vector<vector<Edge>>* T, const char *file_path);
+    int to_newick_file(vector<vector<Edge>>* T);
 
 };
 
