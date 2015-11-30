@@ -12,17 +12,18 @@ int Naive::run(SimpleParser &parser) {
     }
     for(i=0;i<parser.n;i++){
 
-        if(parser.unused[parser.offset[i]]) continue;
+        if(parser.unused[i]) continue;
         double dim = 0.0;
         for(j=0;j<parser.n;j++){
 
-            if(parser.unused[parser.offset[j]] || i == j) continue;
-            dim += parser.D[parser.offset[i]][parser.offset[j]];
+            if(parser.unused[j] || i == j) continue;
+            dim += parser.D[i][j];
 
         }
 
         r[i] = dim/(S-2);
     }
+
     while(S > 3){
 
 
@@ -36,12 +37,12 @@ int Naive::run(SimpleParser &parser) {
         double minnij = std::numeric_limits<double>::max();
         for(i=1;i<parser.n;i++){
 
-            if(parser.unused[parser.offset[i]]) continue;
+            if(parser.unused[i]) continue;
 
             for(j=i;j<parser.n;j++){
 
-                if(parser.unused[parser.offset[j]] || i == j) continue;
-                double nij = parser.D[parser.offset[i]][parser.offset[j]]-r[i]-r[j];
+                if(parser.unused[j] || i == j) continue;
+                double nij = parser.D[i][j]-r[i]-r[j];
                 if(nij < minnij){
                     minnij = nij;
                     mini = i;
@@ -70,7 +71,7 @@ int Naive::run(SimpleParser &parser) {
         size_t minioffsetD =  parser.getOffsetD(mini);
         size_t minjoffsetD = parser.getOffsetD(minj);
         edge.neighbor = minioffsetD;
-        edge.weight = (parser.D[parser.offset[mini]][parser.offset[minj]] + r[mini]- r[minj])/2;
+        edge.weight = (parser.D[mini][minj] + r[mini]- r[minj])/2;
         T[k].push_back(edge);
         //create edge between mini and k
         edge.neighbor = k;
@@ -78,7 +79,7 @@ int Naive::run(SimpleParser &parser) {
 
         //create edge between k and minj
         edge.neighbor = minjoffsetD;
-        edge.weight = (parser.D[parser.offset[mini]][parser.offset[minj]] + r[minj]- r[mini])/2;
+        edge.weight = (parser.D[mini][minj] + r[minj]- r[mini])/2;
         T[k].push_back(edge);
         //create edge between minj and k
         edge.neighbor = k;
@@ -90,28 +91,22 @@ int Naive::run(SimpleParser &parser) {
          */
 
         dkm.resize(k);
+        r[minj] = 0.0;
         for(i=0;i<k;i++){
 
             if(parser.unused[parser.offset[i]]) continue;
 
-            dkm[i] = (parser.D[parser.offset[mini]][parser.offset[i]]+parser.D[parser.offset[minj]][parser.offset[i]]-parser.D[parser.offset[mini]][parser.offset[minj]])/2;
-
+            dkm[i] = (parser.D[mini][parser.offset[i]]+parser.D[minj][parser.offset[i]]-parser.D[mini][minj])/2;
+            r[minj] += dkm[i];
         }
+        r[minj] /= (S - 3);
 
-        const double dij = parser.D[parser.offset[mini]][parser.offset[minj]];
-        //r[mini] = .0;
         for(m = 0; m < parser.n; m++) {
-            if(parser.unused[parser.offset[m]] || mini == m) continue;
+            if(parser.unused[m] || minj == m) continue;
 
-            double dmj = parser.D[parser.offset[m]][parser.offset[minj]];
-            double dmi = parser.D[parser.offset[m]][parser.offset[mini]];
+            r[m] = (r[m]*(S-2) - parser.D[m][minj] - parser.D[m][mini] + dkm[parser.getOffsetD(m)])/(S-3);
 
-            parser.D[parser.offset[m]][parser.offset[mini]] = (dmi + dmj - dij)*.5;
-
-            r[m] = ((r[m] * (S-1.)) - dmi + dmj - dmi) / (S - 2.);
-            //r[mini] += parser.D[parser.offset[m]][parser.offset[mini]];
         }
-        //r[mini] /= S - 1987.0;
 
         /*
          *
@@ -128,8 +123,6 @@ int Naive::run(SimpleParser &parser) {
             parser.D[parser.offset[k]][parser.offset[i]] = dkm[i];
             parser.D[parser.offset[i]][parser.offset[k]] = dkm[i];
         }
-
-
 
         S--;
 
@@ -148,7 +141,6 @@ int Naive::run(SimpleParser &parser) {
             }
         }
     }
-
     size_t v = parser.getNextId();
 
     /*
@@ -160,7 +152,6 @@ int Naive::run(SimpleParser &parser) {
     i = parser.getOffsetD(i);
     j = parser.getOffsetD(j);
     m = parser.getOffsetD(m);
-
     Parser::Edge edge;
     //create edge between v and i
     edge.neighbor = i;
