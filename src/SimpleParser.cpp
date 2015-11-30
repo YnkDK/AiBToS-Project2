@@ -37,7 +37,7 @@ void SimpleParser::dfs(size_t curNode, double weight){
     visited[curNode] = true;
     //if the curNode is not a leaf we have to print a left parenthesis
     if(!isLeaf(curNode)) {
-        cout << '(';
+        printf("(");
     }
     //sz will save the number of neighbours of curNode
     size_t sz = (*T)[curNode].size();
@@ -58,27 +58,25 @@ void SimpleParser::dfs(size_t curNode, double weight){
                     }
                 }
                 if(numNodesLeft>0)
-                    cout<<',';
+                    printf(",");
         }
     }
     //if the current node is the starting node then we print );
     if(curNode == (*T)[0][0].neighbor) {
-        cout << ");";
+        printf(");");
     }
     //else if it's an internal node we print ): and the weight
     else if(!isLeaf(curNode)){
-        cout<<"):"<<weight;
+        printf("):%lf", weight);
     }
     //else if it's neither an internal node nor the starting node, it must be a leaf so print the name of the leaf together with the weight
     else{
-        cout << leafLabels[curNode] <<":"<< weight;
+        printf("%s:%lf",leafLabels[curNode].c_str(), weight);
     }
 }
 
 int SimpleParser::to_newick_file(vector<vector<Edge>>* T) {
     // EXIT_FAILURE if anything goes wrong
-    ios_base::sync_with_stdio(false);
-    cin.tie(0);
     this->T = T;
     visited.resize(T->size(), false);
     dfs((*T)[0][0].neighbor, (*T)[0][0].weight);

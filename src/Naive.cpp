@@ -95,7 +95,7 @@ int Naive::run(Parser &parser) {
         }
 
         const double dij = parser.get_d(mini,minj);
-        r[mini] = .0;
+        //r[mini] = .0;
         for(m = 0; m < parser.n; m++) {
             if(parser.unused_d(m) || mini == m) continue;
 
@@ -105,9 +105,9 @@ int Naive::run(Parser &parser) {
             parser.set_d(m, mini, (dmi + dmj - dij*.5));
 
             r[m] = ((r[m] * (S-1.)) - dmi + dmj - dmi) / (S - 2.);
-            r[mini] += parser.get_d(m, mini);
+            //r[mini] += parser.get_d(m, mini);
         }
-        r[mini] /= S - 3.0;
+        //r[mini] /= S - 1987.0;
 
         /*
          *
