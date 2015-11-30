@@ -5,9 +5,9 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib/")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "lib/")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 
-set(CMAKE_CXX_FLAGS "-O0 -Wall -std=c++0x -march=native")
+set(CMAKE_CXX_FLAGS "-O3 -Wall -std=c++0x -march=native")
 
 set(SOURCE_FILES
-        src/Program.cpp src/interface/Parser.h src/interface/NeighborJoining.h src/Naive.cpp src/Naive.h src/SimpleParser.cpp src/SimpleParser.h src/TriangleParser.cpp src/Data.cpp src/Data.h)
+        src/Program.cpp src/interface/Parser.h src/interface/NeighborJoining.h src/Naive.cpp src/Naive.h src/SimpleParser.cpp src/SimpleParser.h src/TriangleParser.cpp)
 
 add_executable(AiBToS_Project2 ${SOURCE_FILES})
