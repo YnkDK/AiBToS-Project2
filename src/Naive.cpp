@@ -7,6 +7,9 @@ int Naive::run(SimpleParser &parser) {
     vector<double> r(parser.n);
     vector<double> dkm;
     T.resize(2*parser.n);
+    for(i=0;i<T.size();i++){
+        T[i].reserve(3);
+    }
     for(i=0;i<parser.n;i++){
 
         if(parser.unused[parser.offset[i]]) continue;
