@@ -27,15 +27,15 @@ public:
      * Get the distance between i and j
      */
     inline double get_d(const size_t i, const size_t j) {
-        return (i>j)? D[offset[i]][offset[j]] : D[offset[j]][offset[i]] ;
+        return (j>i)? D[offset[i]][offset[j]] : D[offset[j]][offset[i]] ;
     }
 
     /**
      * Sets the distance between i and j
      */
     inline void set_d(const size_t i, const size_t j, const double value) {
-        if(i>j) D[offset[j]][offset[i]] = value;
-        else D[offset[i]][offset[j]] = value;
+        if(j>i) D[offset[i]][offset[j]] = value;
+        else D[offset[j]][offset[i]] = value;
     }
     /**
      * Removes the row i and column i in d

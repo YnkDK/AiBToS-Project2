@@ -164,14 +164,5 @@ int Naive::run(Parser &parser) {
     T[m].push_back(edge);
 
 
-
-    for(i=0;i<T.size();i++){
-        cout<<i<<": ";
-        for(j=0;j<T[i].size();j++){
-            cout<<"{"<<T[i][j].neighbor<<","<<T[i][j].weight<<"} ";
-        }
-        cout<<endl;
-    }
-
     return EXIT_SUCCESS;
 }
