@@ -1,32 +1,32 @@
 #include "Naive.h"
 
 int Naive::run(Parser &parser) {
-
+    size_t i,j,m;
     size_t S = parser.n;
     vector<double> r(parser.n);
     vector<double> dkm;
     T.resize(2*parser.n);
+    for(i=0;i<parser.n;i++){
 
+        if(parser.unused_d(i)) continue;
+        double dim = 0.0;
+        for(j=0;j<parser.n;j++){
+
+            if(parser.unused_d(j) || i == j) continue;
+            dim += parser.get_d(i,j);
+
+        }
+
+        r[i] = dim/(S-2);
+    }
     while(S > 3){
 
-        size_t i,j;
+
         /*
          * step 1
          *
          */
-        for(i=0;i<parser.n;i++){
 
-            if(parser.unused_d(i)) continue;
-            double dim = 0.0;
-            for(j=0;j<parser.n;j++){
-
-                if(parser.unused_d(j) || i == j) continue;
-                dim += parser.get_d(i,j);
-
-            }
-
-            r[i] = dim/(S-2);
-        }
         size_t mini = (size_t) -1;
         size_t minj = (size_t) -1;
         double minnij = std::numeric_limits<double>::max();
@@ -94,6 +94,21 @@ int Naive::run(Parser &parser) {
 
         }
 
+        const double dij = parser.get_d(mini,minj);
+        r[mini] = .0;
+        for(m = 0; m < parser.n; m++) {
+            if(parser.unused_d(m) || mini == m) continue;
+
+            double dmj = parser.get_d(m, minj);
+            double dmi = parser.get_d(m, mini);
+
+            parser.set_d(m, mini, (dmi + dmj - dij*.5));
+
+            r[m] = ((r[m] * (S-1.)) - dmi + dmj - dmi) / (S - 2.);
+            r[mini] += parser.get_d(m, mini);
+        }
+        r[mini] /= S - 3.0;
+
         /*
          *
          * step 5
@@ -110,11 +125,12 @@ int Naive::run(Parser &parser) {
             parser.set_d(i,k,dkm[i]);
         }
 
+
+
         S--;
 
     }
 
-    size_t i,j,m;
     i = j = m = (size_t)-1;
 
     for(size_t x = 0; x < parser.n; x++){
