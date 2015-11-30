@@ -5,36 +5,27 @@
 #include "interface/Parser.h"
 #include <fstream>
 
-class SimpleParser : public Parser {
+class SimpleParser {
 private:
-    vector<vector<double>> D;
-    vector<size_t> offset;
     vector<size_t> offsetD;
-    vector<bool> unused;
     size_t last_delete;
-    vector<vector<Edge>> *T;
+    vector<vector<Parser::Edge>> *T;
     void dfs(size_t curNode, double weight);
     vector<bool> visited;
+
+
     vector<size_t> numNeighborsLeft;
     inline bool isLeaf(size_t node){
         return node < leafLabels.size();
     }
-
 public:
+    vector<vector<double>> D;
+    vector<bool> unused;
+    vector<size_t> offset;
     size_t rows;
-    /**
-     * Get the distance between i and j
-     */
-    inline double get_d(const size_t i, const size_t j) {
-        return D[offset[i]][offset[j]];
-    }
+    vector<string> leafLabels;
+    size_t n;
 
-    /**
-     * Sets the distance between i and j
-     */
-    inline void set_d(const size_t i, const size_t j, const double value) {
-        D[offset[i]][offset[j]] = value;
-    }
     /**
      * Removes the row i and column i in d
      */
@@ -55,12 +46,7 @@ public:
         unused[last_delete] = false;
         return rows;
     }
-    /**
-     * Returns true if row/column is not used anymore, false otherwise
-     */
-    inline bool unused_d(const size_t i) {
-        return unused[offset[i]];
-    }
+
     
     inline size_t getNextId(){
         return rows+1;
@@ -94,7 +80,7 @@ public:
     }
 
     int from_phylip_file(const char *file_path);
-    int to_newick_file(vector<vector<Edge>>* T);
+    int to_newick_file(vector<vector<Parser::Edge>>* T);
 
 };
 

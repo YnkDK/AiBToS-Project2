@@ -18,8 +18,6 @@ public:
         size_t neighbor;
         double weight;
     };
-    size_t n;
-    vector<string> leafLabels;
 
     virtual double get_d(const size_t i, const size_t j) = 0;
     virtual void set_d(const size_t i, const size_t j, const double value) = 0;

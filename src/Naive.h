@@ -3,6 +3,8 @@
 
 
 #include "interface/NeighborJoining.h"
+#include "SimpleParser.h"
+
 
 class Naive : public NeighborJoining {
 
@@ -10,7 +12,7 @@ private:
     vector<vector<Parser::Edge>> T;
 
 public:
-    int run(Parser &parser);
+    int run(SimpleParser &parser);
     vector<vector<Parser::Edge>> * getT(){
         return &T;
     }

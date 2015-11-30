@@ -1,6 +1,7 @@
 #include "Naive.h"
 
-int Naive::run(Parser &parser) {
+int Naive::run(SimpleParser &parser) {
+
     size_t i,j,m;
     size_t S = parser.n;
     vector<double> r(parser.n);
@@ -8,12 +9,12 @@ int Naive::run(Parser &parser) {
     T.resize(2*parser.n);
     for(i=0;i<parser.n;i++){
 
-        if(parser.unused_d(i)) continue;
+        if(parser.unused[parser.offset[i]]) continue;
         double dim = 0.0;
         for(j=0;j<parser.n;j++){
 
-            if(parser.unused_d(j) || i == j) continue;
-            dim += parser.get_d(i,j);
+            if(parser.unused[parser.offset[j]] || i == j) continue;
+            dim += parser.D[parser.offset[i]][parser.offset[j]];
 
         }
 
@@ -32,12 +33,12 @@ int Naive::run(Parser &parser) {
         double minnij = std::numeric_limits<double>::max();
         for(i=1;i<parser.n;i++){
 
-            if(parser.unused_d(i)) continue;
+            if(parser.unused[parser.offset[i]]) continue;
 
             for(j=i;j<parser.n;j++){
 
-                if(parser.unused_d(j) || i == j) continue;
-                double nij = parser.get_d(i,j)-r[i]-r[j];
+                if(parser.unused[parser.offset[j]] || i == j) continue;
+                double nij = parser.D[parser.offset[i]][parser.offset[j]]-r[i]-r[j];
                 if(nij < minnij){
                     minnij = nij;
                     mini = i;
@@ -66,7 +67,7 @@ int Naive::run(Parser &parser) {
         size_t minioffsetD =  parser.getOffsetD(mini);
         size_t minjoffsetD = parser.getOffsetD(minj);
         edge.neighbor = minioffsetD;
-        edge.weight = (parser.get_d(mini,minj) + r[mini]- r[minj])/2;
+        edge.weight = (parser.D[parser.offset[mini]][parser.offset[minj]] + r[mini]- r[minj])/2;
         T[k].push_back(edge);
         //create edge between mini and k
         edge.neighbor = k;
@@ -74,7 +75,7 @@ int Naive::run(Parser &parser) {
 
         //create edge between k and minj
         edge.neighbor = minjoffsetD;
-        edge.weight = (parser.get_d(mini,minj) + r[minj]- r[mini])/2;
+        edge.weight = (parser.D[parser.offset[mini]][parser.offset[minj]] + r[minj]- r[mini])/2;
         T[k].push_back(edge);
         //create edge between minj and k
         edge.neighbor = k;
@@ -88,24 +89,24 @@ int Naive::run(Parser &parser) {
         dkm.resize(k);
         for(i=0;i<k;i++){
 
-            if(parser.unused_d(i)) continue;
+            if(parser.unused[parser.offset[i]]) continue;
 
-            dkm[i] = (parser.get_d(mini,i)+parser.get_d(minj,i)-parser.get_d(mini,minj))/2;
+            dkm[i] = (parser.D[parser.offset[mini]][parser.offset[i]]+parser.D[parser.offset[minj]][parser.offset[i]]-parser.D[parser.offset[mini]][parser.offset[minj]])/2;
 
         }
 
-        const double dij = parser.get_d(mini,minj);
+        const double dij = parser.D[parser.offset[mini]][parser.offset[minj]];
         //r[mini] = .0;
         for(m = 0; m < parser.n; m++) {
-            if(parser.unused_d(m) || mini == m) continue;
+            if(parser.unused[parser.offset[m]] || mini == m) continue;
 
-            double dmj = parser.get_d(m, minj);
-            double dmi = parser.get_d(m, mini);
+            double dmj = parser.D[parser.offset[m]][parser.offset[minj]];
+            double dmi = parser.D[parser.offset[m]][parser.offset[mini]];
 
-            parser.set_d(m, mini, (dmi + dmj - dij*.5));
+            parser.D[parser.offset[m]][parser.offset[mini]] = (dmi + dmj - dij)*.5;
 
             r[m] = ((r[m] * (S-1.)) - dmi + dmj - dmi) / (S - 2.);
-            //r[mini] += parser.get_d(m, mini);
+            //r[mini] += parser.D[parser.offset[m]][parser.offset[mini]];
         }
         //r[mini] /= S - 1987.0;
 
@@ -120,9 +121,9 @@ int Naive::run(Parser &parser) {
         parser.add_node();
 
         for(i=0;i<k;i++){
-            if(parser.unused_d(i)) continue;
-            parser.set_d(k,i,dkm[i]);
-            parser.set_d(i,k,dkm[i]);
+            if(parser.unused[parser.offset[i]]) continue;
+            parser.D[parser.offset[k]][parser.offset[i]] = dkm[i];
+            parser.D[parser.offset[i]][parser.offset[k]] = dkm[i];
         }
 
 
@@ -134,7 +135,7 @@ int Naive::run(Parser &parser) {
     i = j = m = (size_t)-1;
 
     for(size_t x = 0; x < parser.n; x++){
-        if(!parser.unused_d(x)){
+        if(!parser.unused[x]){
 
             if(i == (size_t)-1) i = x;
             else if(j == (size_t)-1) j = x;
@@ -160,21 +161,21 @@ int Naive::run(Parser &parser) {
     Parser::Edge edge;
     //create edge between v and i
     edge.neighbor = i;
-    edge.weight = (parser.get_d(i,j) + parser.get_d(i,m)-parser.get_d(j,m))/2;
+    edge.weight = (parser.D[parser.offset[i]][parser.offset[j]] + parser.D[parser.offset[i]][parser.offset[m]]-parser.D[parser.offset[j]][parser.offset[m]])/2;
     T[v].push_back(edge);
     edge.neighbor = v;
     T[i].push_back(edge);
 
     //create edge between v and j
     edge.neighbor = j;
-    edge.weight = (parser.get_d(i,j) + parser.get_d(j,m)-parser.get_d(i,m))/2;
+    edge.weight = (parser.D[parser.offset[i]][parser.offset[j]] + parser.D[parser.offset[j]][parser.offset[m]]-parser.D[parser.offset[i]][parser.offset[m]])/2;
     T[v].push_back(edge);
     edge.neighbor = v;
     T[j].push_back(edge);
 
     //create edge between v and m
     edge.neighbor = m;
-    edge.weight = (parser.get_d(i,m) + parser.get_d(j,m)-parser.get_d(i,j))/2;
+    edge.weight = (parser.D[parser.offset[i]][parser.offset[m]] + parser.D[parser.offset[j]][parser.offset[m]]-parser.D[parser.offset[i]][parser.offset[j]])/2;
     T[v].push_back(edge);
     edge.neighbor = v;
     T[m].push_back(edge);

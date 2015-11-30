@@ -75,7 +75,7 @@ void SimpleParser::dfs(size_t curNode, double weight){
     }
 }
 
-int SimpleParser::to_newick_file(vector<vector<Edge>>* T) {
+int SimpleParser::to_newick_file(vector<vector<Parser::Edge>>* T) {
     // EXIT_FAILURE if anything goes wrong
     this->T = T;
     visited.resize(T->size(), false);
