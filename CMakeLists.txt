@@ -5,7 +5,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "lib/")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "lib/")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "bin/")
 
-set(CMAKE_CXX_FLAGS "-Wall -std=c++0x -march=native -g")
+
+set(CMAKE_CXX_FLAGS "-O3 -Wall -std=c++0x -march=native")
 
 set(SOURCE_FILES
         src/Program.cpp src/interface/Parser.h src/Naive.cpp src/SimpleParser.cpp)
