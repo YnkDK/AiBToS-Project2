@@ -25,6 +25,7 @@
 # Executables
 *.exe
 /tmp
+/bin/AiBToS_Project1
 *.out
 *.app
 
