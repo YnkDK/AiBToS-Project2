@@ -69,7 +69,7 @@ void SimpleParser::dfs(size_t curNode, double weight){
     }
     //else if it's neither an internal node nor the starting node, it must be a leaf so print the name of the leaf together with the weight
     else{
-        fout << leafLabels[curNode] <<":"<<(*T)[curNode][0].weight;
+        fout << leafLabels[curNode] <<":"<< weight;
     }
 }
 
